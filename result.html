@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Grade Portal | Academic Records</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content text-center">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="logo-text">Academic Records</div>
+                </div>
+                <h1>Student Performance Dashboard</h1>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Back Button -->
+        <a href="index.html" class="btn btn-secondary mb-4">
+            <i class="fas fa-arrow-left btn-icon"></i>
+            Back to Search
+        </a>
+
+        <!-- Rank Badge -->
+        <div class="rank-badge">
+            <i class="fas fa-trophy rank-icon"></i>
+            <span>Loading...</span>
+        </div>
+
+        <!-- Student Profile -->
+        <div class="card">
+            <div class="student-profile">
+                <div class="student-avatar">
+                    <!-- Will be populated by JS -->
+                </div>
+                <div class="student-details">
+                    <h2 class="student-name">Loading...</h2>
+                    <div class="student-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-id-card meta-icon"></i>
+                            <span>ID: Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Grades Table -->
+            <div class="grades-section">
+                <div class="section-header">
+                    <h3>
+                        <i class="fas fa-book-open text-primary"></i>
+                        Subject-wise Performance
+                    </h3>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="grades-table">
+                        <thead>
+                            <tr>
+                                <th>Subject Code</th>
+                                <th>Subject Name</th>
+                                <th>Marks Obtained</th>
+                                <th>Total Marks</th>
+                                <th>Percentage</th>
+                                <th>Grade</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="7" class="text-center p-4">
+                                    <i class="fas fa-spinner fa-spin"></i> Loading records...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Academic Records System</span>
+                </div>
+                <div class="footer-info">
+                    <p>&copy; 2023 Mohamed Alsayed. All rights reserved.</p>
+                    <p>Academic Records Management System | Version 1.0</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Load scripts -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/results.js"></script>
+</body>
+</html>

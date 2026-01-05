@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Grade Portal | Search</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content text-center">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="logo-text">GradePortal</div>
+                </div>
+                <h1>Student Academic Records</h1>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <i class="fas fa-search card-icon"></i>
+                    Student Record Search
+                </h2>
+                <p class="text-gray">Enter your unique Student ID to access your academic records</p>
+            </div>
+
+            <!-- Alert Message -->
+            <div class="alert alert-danger d-none" id="errorAlert">
+                <i class="fas fa-exclamation-circle alert-icon"></i>
+                <span id="errorMessage">Student ID not found or deleted. Please check and try again.</span>
+            </div>
+
+            <!-- Search Form -->
+            <form id="searchForm" class="mb-4">
+                <div class="form-group">
+                    <label for="studentId" class="form-label">
+                        <i class="fas fa-id-card text-primary"></i>
+                        Student Identification Number
+                    </label>
+                    <input type="text" 
+                           id="studentId" 
+                           name="id"
+                           class="form-control" 
+                           placeholder="e.g., S2023001, CS2023002, or BBA2023003"
+                           required
+                           pattern="[A-Za-z0-9]+"
+                           title="Please enter a valid Student ID">
+                    <small class="text-gray">Enter your student ID exactly as provided by the institution</small>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="fas fa-search btn-icon"></i>
+                    Search Academic Records
+                </button>
+            </form>
+        </div>
+
+        <!-- Features Section -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <i class="fas fa-star card-icon"></i>
+                    Portal Features
+                </h2>
+            </div>
+            <div class="d-flex flex-wrap gap-4">
+                <div class="stat-card" style="flex: 1; min-width: 250px;">
+                    <div class="stat-value">
+                        <i class="fas fa-chart-line text-primary"></i>
+                    </div>
+                    <div class="stat-label">Academic Performance</div>
+                    <p class="text-gray">View detailed grade breakdowns and performance metrics</p>
+                </div>
+                <div class="stat-card" style="flex: 1; min-width: 250px;">
+                    <div class="stat-value">
+                        <i class="fas fa-trophy text-primary"></i>
+                    </div>
+                    <div class="stat-label">Class Ranking</div>
+                    <p class="text-gray">See your position relative to peers with percentile ranking</p>
+                </div>
+                <div class="stat-card" style="flex: 1; min-width: 250px;">
+                    <div class="stat-value">
+                        <i class="fas fa-shield-alt text-primary"></i>
+                    </div>
+                    <div class="stat-label">Secure Access</div>
+                    <p class="text-gray">Protected access to ensure privacy of academic records</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>GradePortal</span>
+                </div>
+                <div class="footer-info">
+                    <p>&copy; 2023 Mohamed Alsayed. All rights reserved.</p>
+                    <p>Academic Records Management System | Version 1.0</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Load scripts -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/search.js"></script>
+</body>
+</html>
