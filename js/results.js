@@ -1,84 +1,78 @@
-document.addEventListener('DOMContentLoaded', async function() {
+document.addEventListener('DOMContentLoaded', async function () {
     console.log('Results page loaded');
-    
+
     // ============================================
     // CONFIGURATION SECTION - EDIT HERE ONLY
     // ============================================
-    
+
     // 1. Which column in database has student ID?
     const STUDENT_ID_COLUMNS = ['Student ID', 'student_id', 'id', 'ID', 'studentId'];
-    
+    const STUDENT_name = ['name'];
+
     // 2. Define what columns to show in table
     // Add/remove objects here to control table display
     const TABLE_COLUMNS = [
         // Format: {columnName: 'Database Column', displayName: 'Shown in Table', maxMarks: optional}
         {
-            columnName: 'Assign 1 Grade(3 marks)',
-            displayName: 'Assignment 1',
-            maxMarks: 3  // Optional - will auto-detect if not set
+            columnName: 'Trauma',
+            displayName: 'Trauma',
+            maxMarks: 100  // Optional - will auto-detect if not set
         },
         {
-            columnName: 'Assign 2 Grade(3 marks)',
-            displayName: 'Assignment 2'
+            columnName: 'Bone surgery',
+            displayName: 'Bone surgery',
+            maxMarks: 100
         },
         {
-            columnName: 'Assign 3 Grade(3 marks)',
-            displayName: 'Assignment 3'
+            columnName: 'PT. Orthopedic and surgery',
+            displayName: 'PT. Orthopedic and surgery',
+            maxMarks: 500
         },
         {
-            columnName: 'Assign 4 Grade(3 marks)',
-            displayName: 'Assignment 4'
+            columnName: 'Radiology',
+            displayName: 'Radiology',
+            maxMarks: 100  // Optional - will auto-detect if not set
+
         },
         {
-            columnName: 'Assign 5 Grade(3 marks)',
-            displayName: 'Assignment 5'
+            columnName: 'Orthosis and prothesis',
+            displayName: 'Orthosis and prothesis',
+            maxMarks: 100
         },
         {
-            columnName: 'TotalAssignments (Scaled - 10 marks)',
-            displayName: 'Assignments Total'
+            columnName: 'Sports injury',
+            displayName: 'Sports injury',
+            maxMarks: 100
         },
         {
-            columnName: 'Midterm(Scaled - 15 marks)',
-            displayName: 'Midterm Exam'
-        },
-        {
-            columnName: 'Quiz (Scaled - 15 marks)',
-            displayName: 'Quiz Total'
-        },
-        {
-            columnName: 'bonus',
-            displayName: 'Bonus Points',
-            maxMarks: 5
-        },
-        {
-            columnName: 'Total',
-            displayName: 'Total Marks',
-            maxMarks: 40
+            columnName: 'total',
+            displayName: 'Total',
+            maxMarks: 1000
         }
         // Add more columns as needed...
     ];
-    
+
     // ============================================
     // DON'T EDIT BELOW (unless you know what you're doing)
     // ============================================
-    
+
     // Get Supabase functions from your config file
     if (!window.supabaseConfig) {
         showPageError('System configuration error.');
         return;
     }
-    
+
     const { supabase, calculateGrade, getGradeBadgeClass, getInitials, safeParseNumber } = window.supabaseConfig;
-    
+
     if (!supabase) {
         showPageError('Database connection failed.');
         return;
     }
-    
+
     // ============================================
     // UTILITY FUNCTIONS - EXPLAINED
     // ============================================
-    
+
     /**
      * FUNCTION 1: showPageError(message)
      * Purpose: Display error message on page when something goes wrong
@@ -100,7 +94,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             `;
         }
     }
-    
+
     /**
      * FUNCTION 2: getColumnValue(data, possibleColumns)
      * Purpose: Safely get a value from database row
@@ -115,7 +109,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
         return null;
     }
-    
+
     /**
      * FUNCTION 3: extractMaxMarks(columnName, configMaxMarks)
      * Purpose: Figure out maximum possible marks for a column
@@ -129,30 +123,30 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (configMaxMarks !== undefined && configMaxMarks !== null) {
             return configMaxMarks;
         }
-        
+
         // Try to extract from column name
         const patterns = [
             /\((\d+)\s*marks?\)/i,      // Matches "(3 marks)"
             /\(Scaled\s*-\s*(\d+)\s*marks?\)/i, // Matches "(Scaled - 15 marks)"
             /(\d+)\s*marks?/i           // Matches "3 marks"
         ];
-        
+
         for (const pattern of patterns) {
             const match = columnName.match(pattern);
             if (match && match[1]) {
                 return parseInt(match[1]);
             }
         }
-        
+
         // Default values for known patterns
         if (columnName.includes('Assign')) return 3;
         if (columnName.includes('Quiz')) return 15;
         if (columnName.includes('Midterm')) return 15;
         if (columnName.includes('bonus')) return 5;
-        
+
         return 0; // Unknown
     }
-    
+
     /**
      * FUNCTION 4: calculatePercentage(marks, maxMarks)
      * Purpose: Calculate percentage from marks and maximum
@@ -163,7 +157,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (maxMarks <= 0) return 0;
         return (marks / maxMarks) * 100;
     }
-    
+
     /**
      * FUNCTION 5: getStatus(percentage)
      * Purpose: Determine pass/fail status
@@ -172,11 +166,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     function getStatus(percentage) {
         return percentage >= 50 ? 'Passed' : 'Failed';
     }
-    
+
     // ============================================
     // MAIN DATA LOADING FUNCTION
     // ============================================
-    
+
     /**
      * FUNCTION 7: loadStudentData()
      * Purpose: Main function that loads and processes student data
@@ -186,29 +180,29 @@ document.addEventListener('DOMContentLoaded', async function() {
         try {
             // Get data from session storage (set by search.js)
             const storedData = sessionStorage.getItem('studentData');
-            
+
             if (!storedData) {
                 showPageError('No student data found. Please search again.');
                 return;
             }
-            
+
             // Parse JSON data
             const studentData = JSON.parse(storedData);
             console.log('Student data loaded:', Object.keys(studentData));
-            
+
             // Populate the page
             populateStudentData(studentData);
-            
+
         } catch (error) {
             console.error('Error:', error);
             showPageError('Failed to load student data.');
         }
     }
-    
+
     // ============================================
     // POPULATE PAGE FUNCTION
     // ============================================
-    
+
     /**
      * FUNCTION 8: populateStudentData(data)
      * Purpose: Fill the HTML page with student data
@@ -220,31 +214,32 @@ document.addEventListener('DOMContentLoaded', async function() {
     function populateStudentData(data) {
         // Get student ID
         const studentId = getColumnValue(data, STUDENT_ID_COLUMNS) || 'Unknown';
+        const studentname = getColumnValue(data, STUDENT_name) || 'Unknown';
         const initials = getInitials(studentId);
-        
+
         // 1. Update Student Profile
         const avatarElement = document.querySelector('.student-avatar');
         const nameElement = document.querySelector('.student-name');
         const metaElement = document.querySelector('.meta-item span');
-        
+
         if (avatarElement) avatarElement.textContent = initials;
-        if (nameElement) nameElement.textContent = `Student ${studentId}`;
+        if (nameElement) nameElement.textContent = `${studentname}`;
         if (metaElement) metaElement.textContent = `ID: ${studentId}`;
-        
-    // 2. Update Rank Badge (shows rank from database)
+
+        // 2. Update Rank Badge (shows rank from database)
         const rankBadge = document.querySelector('.rank-badge span');
         if (rankBadge) {
             // Try different column names for rank
-        const rankValue = data['Rank'] || data['rank'] || data['Class Rank'] || data['Position'] || 'Error';
-        rankBadge.textContent = `Rank: ${rankValue}`;
+            const rankValue = data['Rank'] || data['rank'] || data['Class Rank'] || data['Position'] || 'Error';
+            rankBadge.textContent = `Rank: ${rankValue}`;
         }
         // 3. Populate Grades Table
         const tbody = document.querySelector('.grades-table tbody');
         if (tbody) {
             tbody.innerHTML = ''; // Clear loading message
-            
+
             let foundColumns = false;
-            
+
             // Loop through each column in TABLE_COLUMNS config
             TABLE_COLUMNS.forEach(config => {
                 // Check if column exists in database
@@ -252,9 +247,9 @@ document.addEventListener('DOMContentLoaded', async function() {
                     console.warn(`Column "${config.columnName}" not found`);
                     return; // Skip this column
                 }
-                
+
                 foundColumns = true;
-                
+
                 // Get data and calculate values
                 const marks = safeParseNumber(data[config.columnName] || 0);
                 const maxMarks = extractMaxMarks(config.columnName, config.maxMarks);
@@ -262,7 +257,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 const grade = calculateGrade(percentage);
                 const gradeClass = getGradeBadgeClass(grade);
                 const status = getStatus(percentage);
-                
+
                 // Create table row
                 const row = document.createElement('tr');
                 row.innerHTML = `
@@ -278,7 +273,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 `;
                 tbody.appendChild(row);
             });
-            
+
             // If no columns found, show message
             if (!foundColumns) {
                 tbody.innerHTML = `
@@ -291,14 +286,14 @@ document.addEventListener('DOMContentLoaded', async function() {
                 `;
             }
         }
-        
+
         console.log('Page populated successfully');
     }
-    
+
     // ============================================
     // START THE PROCESS
     // ============================================
-    
+
     // When page loads, run loadStudentData()
     loadStudentData();
 });
